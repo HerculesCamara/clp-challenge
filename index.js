@@ -10,9 +10,7 @@ var output = [];
 
 var columnName = arr[0].split(",");
 
-arr = arr.map((line) => {
-  return line.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/);
-});
+arr = arr.map((line) => line.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/));
 
 var obj = {};
 var aux = {};
@@ -34,7 +32,6 @@ for (var i = 1; i < arr.length; i++) {
   repeat = -1;
 
   arr[i].forEach((value, index) => {
-    /* console.log("'", columnName[index], "'"); */
     function insertAdresses() {
       var columnNameSplited = columnName[index].split(" ");
       var auth;
@@ -106,12 +103,10 @@ for (var i = 1; i < arr.length; i++) {
         obj["addresses"].push({ ...aux });
       }
     }
-    // Verifica se é colune sem espaço
+    // Verifica se é coluna sem espaço
     if (!columnName[index].trim().includes(" ")) {
-      /* console.log(columnName[index]); */
-      // verifica se é a coluna group e se há valor na coluna para adicionar em obj.groups
-
       if (columnName[index]?.toLowerCase().trim() === "eid") {
+        // Verifica se o eid já foi cadastrado anteriormente
         if (output.map((e) => e.eid).indexOf(value) !== -1) {
           obj = output[output.map((e) => e.eid).indexOf(value)];
           repeat = output.map((e) => e.eid).indexOf(value);
@@ -123,7 +118,6 @@ for (var i = 1; i < arr.length; i++) {
         if (value.includes(",")) {
           obj.groups = [
             ...obj.groups,
-            //isso faz remover os espaços e as aspas
             ...value
               .trim()
               .split(",")
@@ -132,7 +126,6 @@ for (var i = 1; i < arr.length; i++) {
         } else {
           obj.groups = [
             ...obj.groups,
-            //isso faz remover os espaços e as aspas
             ...value
               .trim()
               .split("/")
@@ -166,15 +159,15 @@ for (var i = 1; i < arr.length; i++) {
   }
 }
 
-/* console.log(JSON.stringify(output, null, 2)); */
-
 fs.writeFileSync("output.json", JSON.stringify(output, null, 2));
 
+// Verifica se o e-mail tem a estrutura de um e-mail
 function validateEmail(email) {
   var re = /\S+@\S+\.\S+/;
   return re.test(email);
 }
 
+// Verifica se tem a estrutura de um numero telefonico brasileiro
 function validatePhone(phone) {
   try {
     const number = phoneUtil.parseAndKeepRawInput(phone, "BR");
@@ -184,6 +177,7 @@ function validatePhone(phone) {
   }
 }
 
+// Colocar o código do pais no numero telefonico
 function numberPhone(phone) {
   const number = phoneUtil.parseAndKeepRawInput(phone, "BR");
   return phoneUtil.format(number, PNF.E164);
