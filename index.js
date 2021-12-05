@@ -166,7 +166,9 @@ for (var i = 1; i < arr.length; i++) {
   }
 }
 
-console.log(JSON.stringify(output, null, 2));
+/* console.log(JSON.stringify(output, null, 2)); */
+
+fs.writeFileSync("output.json", JSON.stringify(output, null, 2));
 
 function validateEmail(email) {
   var re = /\S+@\S+\.\S+/;
